@@ -6,6 +6,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { usePropertyStore } from '@/stores/property-store';
+import { validateProperty } from '@/utils/validation';
 
 export function PropertyStep() {
   const { selectedProperty, setSelectedProperty } = usePropertyStore();
@@ -28,3 +29,9 @@ export function PropertyStep() {
     </div>
   );
 }
+
+// Export the validation hook for use in MultiStepBookingForm
+export const usePropertyStepValidation = () => {
+  const selectedProperty = usePropertyStore((state) => state.selectedProperty);
+  return validateProperty(selectedProperty);
+};

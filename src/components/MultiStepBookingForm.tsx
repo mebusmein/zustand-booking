@@ -2,20 +2,39 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useBookingFlow } from '@/stores/booking-flow';
 import { useBookingStore } from '@/stores/booking-store';
-import { PropertyStep } from './booking/steps/PropertyStep';
+import { PropertyStep, usePropertyStepValidation } from './booking/steps/PropertyStep';
 import { DatesStep } from './booking/steps/DatesStep';
-import { RoomStep } from './booking/steps/RoomStep';
+import { RoomStep, useRoomStepValidation } from './booking/steps/RoomStep';
 import { ExtrasStep } from './booking/steps/ExtrasStep';
-import { PaymentStep } from './booking/steps/PaymentStep';
+import { PaymentStep, usePaymentStepValidation } from './booking/steps/PaymentStep';
 import { ConfirmationStep } from './booking/steps/ConfirmationStep';
-import { RoomProvider } from '@/contexts/room-context';
-import { usePropertyStore } from '@/stores/property-store';
-import { ExtrasProvider } from '@/contexts/extras-context';
+import { BookingProviders } from './BookingProviders';
 
 export function MultiStepBookingForm() {
   const { currentStep, nextStep, previousStep } = useBookingFlow();
   const { isComplete, submitBooking, resetBooking } = useBookingStore();
-  const propertyId = usePropertyStore((state) => state.selectedProperty);
+
+  // Validation hooks
+  const isPropertyValid = usePropertyStepValidation();
+  const isRoomValid = useRoomStepValidation();
+  const isPaymentValid = usePaymentStepValidation();
+
+  const isStepValid = () => {
+    switch (currentStep) {
+      case 1:
+        return isPropertyValid;
+      case 2:
+        return true;
+      case 3:
+        return isRoomValid;
+      case 4:
+        return true; // Extras are optional
+      case 5:
+        return isPaymentValid;
+      default:
+        return true;
+    }
+  };
 
   const renderStep = () => {
     switch (currentStep) {
@@ -70,32 +89,35 @@ export function MultiStepBookingForm() {
   }
 
   return (
-    <RoomProvider propertyId={propertyId}>
-      <ExtrasProvider propertyId={propertyId}>
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle>Book Your Stay</CardTitle>
-            <CardDescription>Step {currentStep} of 6</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {renderStep()}
-              <div className="flex justify-between pt-4">
-                {currentStep > 1 && currentStep < 6 && (
-                  <Button type="button" variant="outline" onClick={previousStep}>
-                    Back
-                  </Button>
-                )}
-                {currentStep < 6 && (
-                  <Button type="button" className="ml-auto" onClick={handleSubmit}>
-                    {currentStep === 5 ? 'Complete Booking' : 'Next'}
-                  </Button>
-                )}
-              </div>
+    <BookingProviders>
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle>Book Your Stay</CardTitle>
+          <CardDescription>Step {currentStep} of 6</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {renderStep()}
+            <div className="flex justify-between pt-4">
+              {currentStep > 1 && currentStep < 6 && (
+                <Button type="button" variant="outline" onClick={previousStep}>
+                  Back
+                </Button>
+              )}
+              {currentStep < 6 && (
+                <Button
+                  type="button"
+                  className="ml-auto"
+                  onClick={handleSubmit}
+                  disabled={!isStepValid()}
+                >
+                  {currentStep === 5 ? 'Complete Booking' : 'Next'}
+                </Button>
+              )}
             </div>
-          </CardContent>
-        </Card>
-      </ExtrasProvider>
-    </RoomProvider>
+          </div>
+        </CardContent>
+      </Card>
+    </BookingProviders>
   );
 }

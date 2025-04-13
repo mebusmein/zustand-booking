@@ -1,6 +1,7 @@
 import { createContext, useContext, ReactNode, useRef, useEffect } from 'react';
 import { createExtrasStore, ExtrasStore, ExtrasState } from '@/stores/extras-store';
 import { useStore } from 'zustand';
+import { useRoomContext } from './room-context';
 
 const ExtrasContext = createContext<ExtrasStore | undefined>(undefined);
 
@@ -9,13 +10,12 @@ const storeMap = new Map<string, ExtrasStore>();
 export function ExtrasProvider({
   children,
   propertyId,
-  roomId,
 }: {
   children: ReactNode;
   propertyId: string | null;
-  roomId: string | null;
 }) {
   const extrasStore = useRef<ExtrasStore>(createExtrasStore('placeholder', 'placeholder'));
+  const roomId = useRoomContext((state) => state.selectedRoom);
 
   useEffect(() => {
     if (propertyId && roomId) {

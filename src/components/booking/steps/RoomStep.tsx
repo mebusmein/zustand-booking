@@ -6,6 +6,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useRoomContext } from '@/contexts/room-context';
+import { validateRoom } from '@/utils/validation';
 
 export function RoomStep() {
   const selectedRoom = useRoomContext((state) => state.selectedRoom);
@@ -29,3 +30,9 @@ export function RoomStep() {
     </div>
   );
 }
+
+// Export the validation hook for use in MultiStepBookingForm
+export const useRoomStepValidation = () => {
+  const selectedRoom = useRoomContext((state) => state.selectedRoom);
+  return validateRoom(selectedRoom);
+};

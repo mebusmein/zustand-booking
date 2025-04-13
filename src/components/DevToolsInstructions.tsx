@@ -1,7 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { ResetStoresButton } from './ResetStoresButton';
-
+import { useAllRoomContexts } from '@/contexts/room-context';
+import { usePropertyStore } from '@/stores/property-store';
 export const DevToolsInstructions = () => {
+  const { currentRoomContext, storedRoomContexts } = useAllRoomContexts();
+  const propertyId = usePropertyStore((state) => state.selectedProperty);
+
   return (
     <div className="sticky top-4">
       <Card className="border-none bg-transparent shadow-none">
@@ -53,9 +57,9 @@ export const DevToolsInstructions = () => {
           <div className="space-y-2">
             <h3 className="font-semibold">3. Current State</h3>
             <div className="rounded bg-gray-100/50 p-4">
-              <p>Selected Room: {'None'}</p>
-              <p>Extras State:</p>
-              <pre className="mt-2 text-sm">{JSON.stringify(null)}</pre>
+              <p>Current Room Context: {propertyId}</p>
+              <pre>{JSON.stringify(currentRoomContext, null, 2)}</pre>
+              <pre>{JSON.stringify(storedRoomContexts, null, 2)}</pre>
             </div>
           </div>
 

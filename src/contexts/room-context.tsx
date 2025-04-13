@@ -1,6 +1,7 @@
 import { createContext, useContext, ReactNode, useRef, useEffect } from 'react';
 import { createRoomStore, createRoomStoreKey, RoomStore, RoomState } from '@/stores/room-store';
 import { useStore } from 'zustand';
+import { usePropertyStore } from '@/stores/property-store';
 
 const RoomContext = createContext<RoomStore | undefined>(undefined);
 
@@ -45,4 +46,17 @@ export function resetAllRoomContexts() {
     store.getState().reset();
     store.persist.clearStorage();
   });
+}
+
+export function useAllRoomContexts() {
+  const propertyId = usePropertyStore((state) => state.selectedProperty);
+  // ts-ignore
+  const roomContext = useRoomContext((state) => state);
+
+  const storedContexts = Array.from(storeMap.entries()).filter(([key]) => key !== propertyId);
+
+  return {
+    currentRoomContext: roomContext,
+    storedRoomContexts: storedContexts,
+  };
 }
