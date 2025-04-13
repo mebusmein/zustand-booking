@@ -5,10 +5,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useRoomStore } from '@/stores/room-store';
+import { useRoomContext } from '@/contexts/room-context';
 
 export function RoomStep() {
-  const { selectedRoom, setSelectedRoom } = useRoomStore();
+  const selectedRoom = useRoomContext((state) => state.selectedRoom);
+  const setSelectedRoom = useRoomContext((state) => state.setSelectedRoom);
 
   return (
     <div className="space-y-2">

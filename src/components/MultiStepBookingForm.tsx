@@ -8,10 +8,14 @@ import { RoomStep } from './booking/steps/RoomStep';
 import { ExtrasStep } from './booking/steps/ExtrasStep';
 import { PaymentStep } from './booking/steps/PaymentStep';
 import { ConfirmationStep } from './booking/steps/ConfirmationStep';
+import { RoomProvider } from '@/contexts/room-context';
+import { usePropertyStore } from '@/stores/property-store';
+import { ExtrasProvider } from '@/contexts/extras-context';
 
 export function MultiStepBookingForm() {
   const { currentStep, nextStep, previousStep } = useBookingFlow();
   const { isComplete, submitBooking, resetBooking } = useBookingStore();
+  const propertyId = usePropertyStore((state) => state.selectedProperty);
 
   const renderStep = () => {
     switch (currentStep) {
@@ -66,28 +70,32 @@ export function MultiStepBookingForm() {
   }
 
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader>
-        <CardTitle>Book Your Stay</CardTitle>
-        <CardDescription>Step {currentStep} of 6</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          {renderStep()}
-          <div className="flex justify-between pt-4">
-            {currentStep > 1 && currentStep < 6 && (
-              <Button type="button" variant="outline" onClick={previousStep}>
-                Back
-              </Button>
-            )}
-            {currentStep < 6 && (
-              <Button type="button" className="ml-auto" onClick={handleSubmit}>
-                {currentStep === 5 ? 'Complete Booking' : 'Next'}
-              </Button>
-            )}
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+    <RoomProvider propertyId={propertyId}>
+      <ExtrasProvider propertyId={propertyId}>
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle>Book Your Stay</CardTitle>
+            <CardDescription>Step {currentStep} of 6</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {renderStep()}
+              <div className="flex justify-between pt-4">
+                {currentStep > 1 && currentStep < 6 && (
+                  <Button type="button" variant="outline" onClick={previousStep}>
+                    Back
+                  </Button>
+                )}
+                {currentStep < 6 && (
+                  <Button type="button" className="ml-auto" onClick={handleSubmit}>
+                    {currentStep === 5 ? 'Complete Booking' : 'Next'}
+                  </Button>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </ExtrasProvider>
+    </RoomProvider>
   );
 }

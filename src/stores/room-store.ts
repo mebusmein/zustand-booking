@@ -1,25 +1,33 @@
-import { create } from 'zustand';
+import { createStore } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { devtools } from 'zustand/middleware';
 
-interface RoomState {
+export interface RoomState {
   selectedRoom: string | null;
   setSelectedRoom: (room: string | null) => void;
   resetRoom: () => void;
+  reset: () => void;
 }
 
-export const useRoomStore = create<RoomState>()(
-  devtools(
-    persist(
-      (set) => ({
-        selectedRoom: null,
-        setSelectedRoom: (room) => set({ selectedRoom: room }),
-        resetRoom: () => set({ selectedRoom: null }),
-      }),
-      {
-        name: 'room-storage',
-      }
-    ),
-    { name: 'room-store' }
-  )
-);
+export const createRoomStoreKey = (storeKey: string) => `room-storage-${storeKey}`;
+
+export type RoomStore = ReturnType<typeof createRoomStore>;
+
+export const createRoomStore = (storeKey: string) => {
+  return createStore<RoomState>()(
+    devtools(
+      persist(
+        (set) => ({
+          selectedRoom: null,
+          setSelectedRoom: (room) => set({ selectedRoom: room }),
+          resetRoom: () => set({ selectedRoom: null }),
+          reset: () => set({ selectedRoom: null }),
+        }),
+        {
+          name: storeKey,
+        }
+      ),
+      { name: storeKey }
+    )
+  );
+};
