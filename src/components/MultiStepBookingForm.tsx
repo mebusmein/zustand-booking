@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useBookingFlow } from '@/stores/booking-flow';
 import { useBookingStore } from '@/stores/booking-store';
 import { PropertyStep, usePropertyStepValidation } from './booking/steps/PropertyStep';
-import { DatesStep } from './booking/steps/DatesStep';
+import { DatesStep, useDatesStepValidation } from './booking/steps/DatesStep';
 import { RoomStep, useRoomStepValidation } from './booking/steps/RoomStep';
 import { ExtrasStep } from './booking/steps/ExtrasStep';
 import { PaymentStep, usePaymentStepValidation } from './booking/steps/PaymentStep';
@@ -16,6 +16,7 @@ export function MultiStepBookingForm() {
 
   // Validation hooks
   const isPropertyValid = usePropertyStepValidation();
+  const isDatesValid = useDatesStepValidation();
   const isRoomValid = useRoomStepValidation();
   const isPaymentValid = usePaymentStepValidation();
 
@@ -24,7 +25,7 @@ export function MultiStepBookingForm() {
       case 1:
         return isPropertyValid;
       case 2:
-        return true;
+        return isDatesValid;
       case 3:
         return isRoomValid;
       case 4:
