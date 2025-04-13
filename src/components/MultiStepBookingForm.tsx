@@ -16,22 +16,19 @@ export function MultiStepBookingForm() {
 
   // Validation hooks
   const isPropertyValid = usePropertyStepValidation();
-  const isDatesValid = useDatesStepValidation();
-  const isRoomValid = useRoomStepValidation();
-  const isPaymentValid = usePaymentStepValidation();
 
   const isStepValid = () => {
     switch (currentStep) {
       case 1:
         return isPropertyValid;
       case 2:
-        return isDatesValid;
+        return true;
       case 3:
-        return isRoomValid;
+        return true;
       case 4:
         return true; // Extras are optional
       case 5:
-        return isPaymentValid;
+        return true;
       default:
         return true;
     }
