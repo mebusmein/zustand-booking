@@ -50,10 +50,19 @@ export function resetAllRoomContexts() {
 
 export function useAllRoomContexts() {
   const propertyId = usePropertyStore((state) => state.selectedProperty);
-  // ts-ignore
   const roomContext = useRoomContext((state) => state);
 
-  const storedContexts = Array.from(storeMap.entries()).filter(([key]) => key !== propertyId);
+  // Subscribe to all stores to ensure updates are tracked
+  const storedContexts = Array.from(storeMap.entries())
+    .filter(([key]) => key !== propertyId)
+    .map(([key, store]) => {
+      // Subscribe to the store to track updates
+      useStore(store, (state) => state);
+      return {
+        name: key,
+        data: store.getState(),
+      };
+    });
 
   return {
     currentRoomContext: roomContext,
