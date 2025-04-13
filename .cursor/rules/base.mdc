@@ -1,0 +1,81 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Project Context
+You are building a Single Page Application (SPA) using Vite, React, TypeScript, Tailwind CSS, and Shadcn UI. The application should be fast, modular, and scalable, with a focus on client-side routing and dynamic user interactions.
+
+## General Principles
+- Write concise and maintainable TypeScript code.
+- Use functional programming patterns; avoid class-based components.
+- Prioritize readability and modularity in all code.
+- Use descriptive variable names (e.g., `isAuthenticated`, `userData`).
+
+## TypeScript Guidelines
+- Use TypeScript for all files to ensure type safety.
+- Prefer `interface` for defining component props and state.
+- Avoid using `any`; use strict types to catch potential issues early.
+- Use utility types like `Pick`, `Omit`, or `Partial` where appropriate.
+
+## React Guidelines
+- Use functional components exclusively.
+- Manage state with React hooks (`useState`, `useReducer`, `useContext`) or external libraries like Zustand if the app grows in complexity.
+- Use `React Router` for client-side navigation with lazy-loaded routes.
+- Minimize the use of `useEffect`; prefer derived state or memoization where possible to avoid unnecessary re-renders.
+
+## SPA-Specific Guidelines
+- Implement client-side routing using `react-router-dom`.
+  - Use dynamic imports (`React.lazy`) to lazy-load route components.
+  - Add route-level error boundaries to handle errors gracefully.
+- Ensure smooth navigation with prefetching for critical data or assets.
+- Use global state management sparingly; prefer local state when possible.
+- Optimize for fast initial load times by splitting your JavaScript bundle.
+
+## Styling and Shadcn UI
+- Use Shadcn UI components for consistent design and accessibility.
+- Tailwind CSS should be used for utility-first styling; avoid inline styles.
+- Follow a mobile-first approach for responsive design.
+- Customize Shadcn UI themes to match your application's branding.
+
+## File Structure
+Organize files to support scalability:
+1. **Pages**: Place route components in a `pages/` directory (e.g., `pages/Home.tsx`).
+2. **Components**: Reusable UI components in a `components/` directory (e.g., `components/Button.tsx`).
+3. **Hooks**: Custom hooks in a `hooks/` directory (e.g., `hooks/useAuth.ts`).
+4. **Context**: Global context providers in a `context/` directory (e.g., `context/AuthContext.tsx`).
+5. **Utils**: Helper functions in a `utils/` directory (e.g., `utils/api.ts`).
+6. **Types**: Shared TypeScript types in a `types/` directory (e.g., `types/User.ts`).
+
+## Naming Conventions
+- Use PascalCase for component files (e.g., `UserProfile.tsx`).
+- Use camelCase for variables and functions (e.g., `fetchUserData`).
+- Use lowercase with dashes for directories (e.g., `components/nav-bar`).
+
+## Error Handling
+- Wrap routes in error boundaries to catch runtime errors per page/component.
+- Handle API errors gracefully with user-friendly messages (e.g., "Failed to load data").
+- Log errors consistently using a centralized logging utility.
+
+## Performance Optimization
+- Lazy-load routes and non-critical components using dynamic imports (`React.lazy()`).
+- Prefetch critical data when navigating between routes using React Router's loaders or custom hooks.
+- Optimize images with modern formats like WebP and lazy loading (`loading="lazy"`).
+- Minimize bundle size by tree-shaking unused dependencies and splitting code into smaller chunks.
+
+## Shadcn-Specific Rules
+1. Use the Shadcn CLI to add components:
+npx shadcn add <component>
+
+text
+2. Keep Shadcn components modular; customize them only when necessary.
+3. Maintain consistent spacing, colors, and typography across all components.
+
+## Testing Guidelines
+1. Write unit tests for reusable components using Jest and React Testing Library.
+2. Test routing behavior and dynamic interactions with integration tests.
+3. Ensure accessibility compliance using tools like Axe or Lighthouse.
+
+## Additional Notes
+1. Follow best practices from the official documentation of Vite, React, TypeScript, Tailwind CSS, React Router, and Shadcn UI.
+2. Regularly update dependencies to leverage new features and fixes:
